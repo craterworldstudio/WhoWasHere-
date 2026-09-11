@@ -1,0 +1,53 @@
+{
+  "root": {
+    "etc": {
+      "hostname.txt": [],
+      "hosts.txt": [],
+      "os-release.txt": [],
+      "shells.txt": []
+    },
+
+    "tmp": {
+      "session.tmp": []
+    },
+
+    "var": {
+      "log": {
+        "system.log": [],
+        "kernel.log": [],
+        "auth.log": []
+      },
+      "cache": []
+    },
+
+    "usr": {
+      "share": {
+        "readme.txt": [],
+        "license.txt": []
+      }
+    },
+
+    "home": {
+      "user": {
+        "Documents": {
+          "readme.txt": [],
+          "notes.txt": []
+        },
+        "Downloads": [],
+        "Pictures": [],
+        "Music": [],
+        "Videos": [],
+        ".config": {
+          "settings.conf": []
+        },
+        ".profile": []
+      }
+    },
+
+    "opt": {
+      "apps": {
+        "readme.txt": []
+      }
+    }
+  }
+}
