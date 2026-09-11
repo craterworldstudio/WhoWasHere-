@@ -1,6 +1,8 @@
 import sys
 from navigator import FileSystem
 from classes import *
+import readline
+
 
 class Terminal:
 
@@ -8,8 +10,9 @@ class Terminal:
         self.history = []
         self.nav = FileSystem()
         self.nav.generate_fs()
+        self.nav.infect()
 
-        print(self.nav.curr_fol)
+        #print(self.nav.curr_fol)
 
         print("========================================================================")
         print("Welcome to 'Who Was Here?' (An Incident Response Game)")
@@ -18,16 +21,39 @@ class Terminal:
         print("Sweep this System which Was Recently Hacked.\nCheck for traces of hack, find out what they used for persistence and file a report at the end to win!")
         print("Type 'help' to see available commands")
 
+
+        readline.set_completer(self.complete_path)
+        readline.parse_and_bind("tab: complete")
+
         while True:
             self.listen()
+
+    def complete_path(self, text, state):
+        matches = []
+
+        for item in self.nav.curr_fol.all:
+            name = item.name
+
+            if name.startswith(text):
+
+                matches.append(name)
+
+        matches.sort()
+
+        if state < len(matches):
+            return matches[state]
+
+        return None
 
 
     def listen(self):
 
-        com_int_r = input(f"[Investigator@nox] [{self.nav.pwd()}] ")
+        com_int_r = input(f"[Investigator@nox] [{self.nav.pwd()}] > ")
         self.history.append(com_int_r)
 
         command = com_int_r.split()
+        if not command:
+            return
 
         if command[0] == "help" and len(command) == 1:
             print("Here is the help list for you!")
@@ -53,10 +79,12 @@ class Terminal:
 
         elif command[0] == "ls" and len(command) < 4:
             if len(command) == 3:
-                if command[2] == "-a":
+                if command[2].startswith("-"):
                     fol = self.nav.get_item(command[1])
                     if isinstance(fol, Folder):
-                        fol.disp(True)
+                        if "a" in command[2][1:]:
+                            fol.disp(True)
+                        else: fol.disp()
                     else:
                         print(f"ls: {command[1]} is a file or doesn't exist.")
                     return
@@ -65,9 +93,13 @@ class Terminal:
                     return
 
             elif len(command) == 2:
-                if command[1] == "-a":
-                    self.nav.curr_fol.disp(True)
-                fol = self.nav.get_item(command[1])
+                if command[1].startswith("-"):
+                    if "a" in command[1][1:]:
+                        self.nav.curr_fol.disp(True)
+                    else:
+                        self.nav.curr_fol.disp()
+
+                fol = self.nav.get_item(command[1][1:])
                 if isinstance(fol, Folder):
                     fol.disp()
 
@@ -93,5 +125,61 @@ class Terminal:
                 print(line)
 
         elif command[0] == "exit" : exit()
+
+        elif command[0] == "report" and len(command) == 1:
+            print("\n" + "="*72)
+            print("REPORT WRITING PROCESS STARTED")
+            print("="*72)
+            print("WARNING: You will not be able to run any more commands.")
+            confirm = input("Are you sure you want to proceed? (y/n): ")
+            if confirm.lower() != 'y':
+                print("Report cancelled.")
+                return
+
+            total_questions = 0
+            correct_answers = 0
+
+            print("\nPlease answer the following questions based on your findings:\n")
+            
+            for index, q_set in enumerate(self.nav.ques_sets):
+                if not q_set:
+                    continue
+                    
+                import random
+                num_q = random.randint(1, len(q_set))
+                selected_q = random.sample(q_set, num_q)
+                
+                print(f"--- Finding {index + 1} ---")
+                for q_dict in selected_q:
+                    question = q_dict.get("question", "")
+                    valid_answers = [str(a).strip().lower() for a in q_dict.get("answers", [])]
+                    
+                    user_ans = input(f"> {question}\nAnswer: ").strip().lower()
+                    
+                    if user_ans in valid_answers:
+                        correct_answers += 1
+                    total_questions += 1
+                print()
+
+            print("="*72)
+            print("REPORT COMPLETE")
+            print("="*72)
+            print(f"Your Score: {correct_answers} / {total_questions}")
+            
+            percentage = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
+            if percentage == 100:
+                print("Rating: S - Excellent work, Investigator! You found all the traces.")
+            elif percentage >= 70:
+                print("Rating: A - Good job! You identified most of the attack footprint.")
+            elif percentage >= 40:
+                print("Rating: B - Fair effort, but you missed some critical indicators.")
+            else:
+                print("Rating: C - You missed several key indicators. Back to training.")
+                
+            print("\nExiting game...")
+            exit(0)
+
+        else:
+            print(f"Invalid Command: {com_int_r}. Type 'help' to see list of available commands.")
 
 t = Terminal()

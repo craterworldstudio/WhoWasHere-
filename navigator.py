@@ -2,6 +2,7 @@ import json
 from classes import *
 from filecontent import FILE_CONTENTS
 import random
+from infection import *
 
 class FileSystem:
 
@@ -12,6 +13,9 @@ class FileSystem:
 
         self.tree = Folder("root")
         self.curr_fol = self.tree #self.fs["root"]
+        self.infec = Infections()
+
+        self.ques_sets = []
 
     def generate_fs(self):
 
@@ -115,8 +119,9 @@ class FileSystem:
 
         for item in self.curr_fol.all:
             if isinstance(item, File):
-                iname = "." if item.hidden else "" + item.name + "." if item.ext else "" + item.ext if item.ext else ""
-                print(name, iname)
+                prefix = "." if item.hidden and not item.name.startswith(".") else ""
+                iname = prefix + item.name + (f".{item.ext}" if item.ext else "")
+                #print(name, iname, item.ext)
                 if iname == name: return item
             else:
                 if item.name == name:
@@ -137,3 +142,60 @@ class FileSystem:
 
         if self.curr_fol.parent:
             self.curr_fol = self.curr_fol.parent
+
+    def path_to_tree(self, path):
+
+        parts = [part for part in path.split("/") if part]
+        current = self.tree
+
+        for part in parts:
+            found = None
+            for item in current.all:
+
+                if isinstance(item, File):
+                    prefix = "." if item.hidden and not item.name.startswith(".") else ""
+                    iname = prefix + item.name + (f".{item.ext}" if item.ext else "")
+
+                    if iname == part:
+                        found = item
+                        break
+                else:
+                    if item.name == part:
+                        found = item
+                        break
+            if found is None:
+                return None
+            if isinstance(found, File):
+                # File is only valid if it is the final component
+                if part != parts[-1]:
+                    return None
+                return found
+            current = found
+        return current
+
+            
+
+    def infect(self):
+        for traceID in self.infec.applied_traces:
+            trace = self.infec.get_infection(traceID)
+            self.ques_sets.append(trace.get("questions"))
+
+            affected_paths = trace.get("affected", [])
+
+            for filep, contents in affected_paths.items():
+                file = self.path_to_tree(filep)
+
+                #print(filep, contents)
+                file.contents = contents[random.randrange(len(contents))]
+
+        persistence = self.infec.get_infection(self.infec.persistance)
+
+        self.ques_sets.append(persistence.get("questions"))
+        affected_paths = persistence.get("affected", [])
+
+        for filep, contents in affected_paths.items():
+            file = self.path_to_tree(filep)
+            
+            file.contents = contents[random.randrange(len(contents))]
+            
+                #print(file.name, file.contents)
