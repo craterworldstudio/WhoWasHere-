@@ -1,6 +1,7 @@
 import json
 from classes import *
-
+from filecontent import FILE_CONTENTS
+import random
 
 class FileSystem:
 
@@ -19,19 +20,52 @@ class FileSystem:
                 #print(item)
                 if ('.' in key and key[0] != '.'):
                     name, ext = key.rsplit('.', 1)
-                    f = File(name, ext)
-                    f.set_path(fol_obj.path)
-                    fol_obj.add(f)
+
+                    if isinstance(item, dict):
+                        fol = Folder(key)
+                        fol.parent = fol_obj
+                        fol.path = fol_obj.path + key if fol_obj.path == "/" else fol_obj.path + "/" + key
+                        fol_obj.add(fol)
+
+                        self.curr_fol = fol
+                        crawl(fol, item)
+
+                    else:
+                        f = File(name, ext)
+                        f.set_path(fol_obj.path)
+                        cont = FILE_CONTENTS.get(key, "")
+                        #print(cont, key)
+                        f.contents = cont[random.randrange(0, 3)]
+                        fol_obj.add(f)
     
                 elif ('.' in key and key[0] == '.'):
                     key_name = key[1:]
             
                     if ('.' in key_name):
                         name, ext = key_name.rsplit('.', 1)
-                        f = File(name, ext)
-                        f.set_path(fol_obj.path)
-                        fol_obj.add(f, True)
+
+                        if isinstance(item, dict):
+                            fol = Folder(key)
+                            fol.parent = fol_obj
+                            fol.path = fol_obj.path + key if fol_obj.path == "/" else fol_obj.path + "/" + key
+                            fol_obj.add(fol)
+
+                            self.curr_fol = fol
+                            self.crawl(fol, item)
+
+                        else:
+                            f = File(name, ext)
+                            f.set_path(fol_obj.path)
+                            f.contents = FILE_CONTENTS.get(key, "")[random.randrange(0,3)]
+                            fol_obj.add(f, True)
                     else:
+                        if isinstance(item, list):
+                            f = File(key)
+                            f.set_path(fol_obj.path)
+                            f.contents = FILE_CONTENTS.get(key, "")[random.randrange(0,3)]
+                            fol_obj.add(f, True)
+                            return
+                        
                         fol = Folder(key)
                         fol.parent = fol_obj
                         fol.path = fol_obj.path + key if fol_obj.path == "/" else fol_obj.path + "/" + key
@@ -40,23 +74,31 @@ class FileSystem:
                         
 
                         self.curr_fol = fol
-                        
+                        #print(key, item)
                         crawl(fol, item)
     
                 elif ('.' not in key):
-                    fol = Folder(key)
-                    #self.curr_path += f"/{key}"
-                    fol.path = fol_obj.path + key if fol_obj.path == "/" else fol_obj.path + "/" + key
-                    fol.parent = fol_obj
-                    fol_obj.add(fol)
 
-                    self.curr_fol = fol
-                    
-                    crawl(fol, item)
+                
+                    if isinstance(item, list):
+                        
+                        f = File(name=key)
+                        f.set_path(fol_obj.path)
+                        cont = FILE_CONTENTS.get(key, "")
+                        #print(cont, key)
+                        f.contents = cont[random.randint(0,2)]
+                        fol_obj.add(f, True)
 
+                    else:
+                        fol = Folder(key)
+                        #self.curr_path += f"/{key}"
+                        fol.path = fol_obj.path + key if fol_obj.path == "/" else fol_obj.path + "/" + key
+                        fol.parent = fol_obj
+                        fol_obj.add(fol)
 
-            #paths = self.curr_path.split("/")
-            #self.curr_path = "".join(paths[:-1])
+                        self.curr_fol = fol
+                        crawl(fol, item)
+
             
                 
 
@@ -72,8 +114,13 @@ class FileSystem:
     def get_item(self, name):
 
         for item in self.curr_fol.all:
-            if item.name == name:
-                return item
+            if isinstance(item, File):
+                iname = "." if item.hidden else "" + item.name + "." if item.ext else "" + item.ext if item.ext else ""
+                print(name, iname)
+                if iname == name: return item
+            else:
+                if item.name == name:
+                    return item
 
         return None
 

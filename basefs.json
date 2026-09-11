@@ -4,7 +4,20 @@
       "hostname.txt": [],
       "hosts.txt": [],
       "os-release.txt": [],
-      "shells.txt": []
+      "shells.txt": [],
+      "cron.d":{
+        "system-maintenance.txt": [],
+        "log-cleanup.txt": []
+      },
+      "cron.hourly": {
+        "system-check.txt": []
+      },
+      "cron.weekly": {
+        "system-maintenance.txt": []
+      },
+      "cron.daily": {
+        "cleanup-temp.txt": []
+      }
     },
 
     "tmp": {
@@ -17,7 +30,18 @@
         "kernel.log": [],
         "auth.log": []
       },
-      "cache": []
+      "cache": {
+        "package-index.txt": [],
+        "system-state.txt": [],
+        "user-cache.txt": []
+      },
+      "spool": {
+        "cron": {
+          "crontabs" : {
+            "investigator.txt" : []
+          }
+        }
+      }
     },
 
     "usr": {
@@ -33,10 +57,10 @@
           "readme.txt": [],
           "notes.txt": []
         },
-        "Downloads": [],
-        "Pictures": [],
-        "Music": [],
-        "Videos": [],
+        "Downloads": {},
+        "Pictures": {},
+        "Music": {},
+        "Videos": {},
         ".config": {
           "settings.conf": []
         },
@@ -51,3 +75,4 @@
     }
   }
 }
+

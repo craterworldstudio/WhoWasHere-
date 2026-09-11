@@ -9,6 +9,8 @@ class Terminal:
         self.nav = FileSystem()
         self.nav.generate_fs()
 
+        print(self.nav.curr_fol)
+
         print("========================================================================")
         print("Welcome to 'Who Was Here?' (An Incident Response Game)")
         print("========================================================================\n")
@@ -22,7 +24,7 @@ class Terminal:
 
     def listen(self):
 
-        com_int_r = input(f"[Investigator@deb] [{self.nav.pwd()}] ")
+        com_int_r = input(f"[Investigator@nox] [{self.nav.pwd()}] ")
         self.history.append(com_int_r)
 
         command = com_int_r.split()
@@ -60,6 +62,7 @@ class Terminal:
                     return
                 else:
                     print("ls: Invalid flag is given or out-of-format command is used.")
+                    return
 
             elif len(command) == 2:
                 if command[1] == "-a":
@@ -79,8 +82,9 @@ class Terminal:
 
             file = self.nav.get_item(filename)
 
-            if not isinstance(file, Folder):
+            if not isinstance(file, File):
                 print(f"cat: {filename} is a folder or doesn't exist.")
+                return
 
             content = file.contents
 
@@ -88,5 +92,6 @@ class Terminal:
             for line in content:
                 print(line)
 
+        elif command[0] == "exit" : exit()
 
 t = Terminal()

@@ -3,7 +3,7 @@ import random
 
 class File:
 
-    def __init__(self, name: str = "file", ext: str = "txt"):
+    def __init__(self, name: str = "file", ext: str = ""):
 
         self.name = name
         self.ext = ext
