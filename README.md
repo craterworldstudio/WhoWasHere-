@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="wwhlogo.png" alt="Who Was Here Logo" width="250"/>
+</p>
+
 # Who Was Here?
 
 #### Video Demo: <URL HERE>
