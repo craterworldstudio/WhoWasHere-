@@ -59,6 +59,7 @@ class Terminal:
             print("Here is the help list for you!")
             print("\t cd  \t- Change Directory.\n\t\t-> Usage 'cd Home' to go in the Home folder or 'cd ..' to go out of the current folder.\n\t\tYou can go up/down only one level at once. ")
             print("\t pwd \t- Print Working/Current Directory Path.")
+            print("\t tree\t- Print the entire folder and subfolders in a tree format.")
             print("\t ls  \t- List Targeted Directory.\n\t\t-> By Default ls will execute with '-l' flag and display the current directory.\n\t\t-> Usage 'ls', 'ls -a', 'ls Home -a")
             print("\t cat \t- Concatenate.\n\t\t-> Used to view File.\n\t\t-> Usage 'cat file.txt'")
             print("\t report\t- Start the Report Writing Process\n\t\t-> Note: Once Started, you cannot execute any other command so make sure you are\n\t\tabsolutely sure before running this.\n\t\t-> Usage 'exit'")
@@ -76,6 +77,9 @@ class Terminal:
 
         elif command[0] == "pwd" and len(command) == 1:
             print(self.nav.pwd())
+
+        elif command[0] == "tree" and len(command) == 1:
+            print(self.nav.curr_fol)
 
         elif command[0] == "ls" and len(command) < 4:
             if len(command) == 3:

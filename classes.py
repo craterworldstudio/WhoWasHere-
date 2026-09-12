@@ -79,7 +79,8 @@ class Folder:
             for i, item in enumerate(items):
                 last = i == len(items) - 1
                 branch = "└── " if last else "├── "
-    
+
+                if item.hidden: continue
                 if isinstance(item, Folder):
                     lines.append(f"{prefix}{branch}{item.name}/")
                     build_tree(
@@ -87,8 +88,7 @@ class Folder:
                         prefix + ("    " if last else "│   ")
                     )
                 else:
-                    
-                    lines.append(f"{prefix}{branch}{item.name}{f'.{item.ext}' if isinstance(item, File) else ""} at {item.path}")
+                    lines.append(f"{prefix}{branch}{item.name}{f'.{item.ext}' if isinstance(item, File) else ""}")
     
         build_tree(self)
     

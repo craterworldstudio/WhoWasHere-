@@ -13,7 +13,7 @@ Every time you play, the game generates a unique scenario by injecting a random 
 ### Features
 * **Virtual Filesystem:** A completely simulated, interactive filesystem populated dynamically upon launch.
 * **Randomized Scenarios:** Traces and persistence mechanisms are selected at random each game, ensuring high replayability.
-* **Basic Shell Commands:** Navigate using familiar commands like `cd`, `ls`, `pwd`, and `cat`.
+* **Basic Shell Commands:** Navigate using familiar commands like `cd`, `ls`, `pwd`, `tree`,and `cat`.
 * **Tab Completion:** Supports standard shell tab-completion for faster navigation.
 * **Interactive Reporting:** Once you've gathered your evidence, use the `report` command to take a randomized quiz on your findings and receive a performance rating (S, A, B, C).
 
@@ -26,6 +26,7 @@ python3 terminal.py
 Once in the game terminal, you can use the following commands to investigate:
 * `help` - Show the list of available commands.
 * `pwd` - Print the current working directory.
+* `tree` -  Print the tree structure from the current folder.
 * `ls` / `ls -a` - List files and directories in the current folder (supports viewing hidden files).
 * `cd <directory>` - Change your current directory to explore different parts of the system.
 * `cat <file>` - Read the contents of a file to look for suspicious modifications.
@@ -42,3 +43,23 @@ Once in the game terminal, you can use the following commands to investigate:
 * `basefs.json`: A JSON map defining the base directory structure of the virtual OS.
 
 Happy hunting, Investigator!
+
+
+## AI Usage & Content Generation
+
+Generative AI tools, specifically **Google Gemini and OpenAI ChatGPT**, were used in the creation of the following files:
+
+* `basefs.json`
+* `filecontent.py`
+* `infections.py`
+
+These files were generated and refined with AI assistance primarily for the purpose of creating **artificial visual and narrative data** for the game's simulated incident-response environment. Their contents provide fictional filesystem states, logs, traces, persistence indicators, and other details intended to make investigations more interesting and believable within the game.
+
+These files **do not implement the core mechanics of WhoWasHere?** and do not determine how the game's underlying systems operate. They primarily provide data that the game's mechanics can display and interpret.
+
+The simulated traces and persistence indicators are **fictional game representations**. Although some of them may resemble terminology, artifacts, or concepts associated with real-world cybersecurity incidents, they are not intended to constitute accurate instructions, procedures, or representations of real-world compromise, persistence, exploitation, or attack techniques.
+
+All potentially malicious-looking commands, paths, payloads, and other content contained within these files are **non-executable strings/data** used solely for visual presentation, investigation gameplay, and narrative purposes. They are not intended to execute, modify, compromise, damage, or otherwise interfere with the user's actual device or operating system.
+
+AI was therefore used primarily as a **content-generation and brainstorming tool for fictional game data**, rather than as the author of the game's core functionality or mechanics. The implementation and integration of the game's actual systems were developed separately.
+
