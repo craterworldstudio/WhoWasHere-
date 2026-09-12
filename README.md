@@ -1,10 +1,6 @@
-<p align="center">
-  <img src="wwhlogo.png" alt="Who Was Here Logo" width="250"/>
-</p>
-
 # Who Was Here?
 
-#### Video Demo: <URL HERE>
+<img src="wwhlogo.png" align="right" width="150" alt="Who Was Here Logo" style="border: 2px solid #a9a9a9; border-radius: 15px; padding: 2px; margin-up: 40px."/>
 
 #### Description:
 
